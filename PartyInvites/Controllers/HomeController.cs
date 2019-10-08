@@ -18,6 +18,8 @@ namespace PartyInvites.Controllers
             ViewBag.Greeting = hour < 12 ? "Good Morning" : "Good Afternoon";
             return View("MyView");
         }
+        
+        //METODO GET
         [HttpGet]
         public ViewResult RsvpForm()
         /**
@@ -28,11 +30,25 @@ namespace PartyInvites.Controllers
         {
             return View();
         }
+        //METODO POST
         [HttpPost]
         public ViewResult RsvpForm(GuestResponse guestResponse)
         {
-            //TODO: STORE RESPONSE FORM GUEST
-            return View();
+            if(ModelState.IsValid)
+            {
+                Repository.AddResponse(guestResponse);
+                return View("Thanks", guestResponse);
+            }
+            else
+            {
+                return View();
+            }
+            
+        }
+
+        public ViewResult ListResponses()
+        {
+            return View(Repository.Responses.Where(r => r.WillAttend == true));
         }
     }
 }
